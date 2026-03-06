@@ -95,7 +95,14 @@ function highlightNav() {
     });
 }
 
-window.addEventListener('scroll', highlightNav);
+let lastScrollTime = 0;
+window.addEventListener('scroll', () => {
+    const now = Date.now();
+    if (now - lastScrollTime > 100) {
+        highlightNav();
+        lastScrollTime = now;
+    }
+});
 
 // ===== Scroll Reveal Animation =====
 function setupReveal() {
@@ -162,7 +169,9 @@ function initParticles() {
 
     const ctx = canvas.getContext('2d');
     let particles = [];
-    const particleCount = 60;
+    // Reduce particle count on mobile/tablets for better performance
+    const isMobile = window.innerWidth < 1024;
+    const particleCount = isMobile ? 30 : 60;
 
     function resize() {
         canvas.width = canvas.offsetWidth;
@@ -337,6 +346,9 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // ===== Card Tilt Effect =====
 function addTiltEffect() {
+    // Disable tilt on mobile for performance
+    if (window.innerWidth < 1024) return;
+
     const cards = document.querySelectorAll('.service-card, .project-card, .value-card');
 
     cards.forEach(card => {

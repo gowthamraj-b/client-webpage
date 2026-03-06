@@ -156,6 +156,8 @@
 html {
     scroll-behavior: smooth;
     font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
 }
 
 body {
@@ -164,6 +166,7 @@ body {
     color: var(--text-primary);
     line-height: 1.7;
     overflow-x: hidden;
+    max-width: 100vw;
     -webkit-font-smoothing: antialiased;
     transition: background 0.4s ease, color 0.4s ease;
 }
@@ -206,6 +209,7 @@ ul {
     padding: 100px 0;
     position: relative;
     transition: background 0.4s ease;
+    overflow-x: hidden;
 }
 
 .section-label {
@@ -1663,23 +1667,27 @@ ul {
     position: fixed;
     inset: 0;
     z-index: 1190;
-    background: radial-gradient(ellipse at 20% 20%, rgba(0, 212, 255, 0.12) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, transparent 40%),
+        linear-gradient(225deg, rgba(124, 58, 237, 0.10) 0%, transparent 40%),
         rgba(6, 6, 18, 0.98);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Clip-path expand from top-right corner (where the button is) */
-    clip-path: circle(0% at calc(100% - 40px) 40px);
-    transition: clip-path 0.7s cubic-bezier(0.77, 0, 0.175, 1);
+    /* Fast GPU-accelerated slide-in from right */
+    transform: translateX(100%);
+    opacity: 0;
+    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.28s ease;
     overflow: hidden;
     pointer-events: none;
+    will-change: transform, opacity;
+    -webkit-transform: translateX(100%);
 }
 
 .mobile-menu.open {
-    clip-path: circle(150% at calc(100% - 40px) 40px);
+    transform: translateX(0);
+    -webkit-transform: translateX(0);
+    opacity: 1;
     pointer-events: all;
 }
 
@@ -1697,43 +1705,29 @@ ul {
     overflow-x: hidden;
 }
 
-/* Decorative blobs */
+/* Decorative blobs — static, no animation for performance */
 .mm-blob {
     position: absolute;
     border-radius: 50%;
     pointer-events: none;
-    filter: blur(60px);
-    opacity: 0.45;
+    filter: blur(50px);
+    opacity: 0.3;
 }
 
 .mm-blob-1 {
-    width: 300px;
-    height: 300px;
-    background: rgba(0, 212, 255, 0.2);
-    top: -80px;
-    left: -80px;
-    animation: mm-float 8s ease-in-out infinite;
+    width: 250px;
+    height: 250px;
+    background: rgba(0, 212, 255, 0.18);
+    top: -60px;
+    left: -60px;
 }
 
 .mm-blob-2 {
-    width: 280px;
-    height: 280px;
-    background: rgba(124, 58, 237, 0.25);
-    bottom: -60px;
-    right: -60px;
-    animation: mm-float 10s ease-in-out infinite reverse;
-}
-
-@keyframes mm-float {
-
-    0%,
-    100% {
-        transform: translate(0, 0) scale(1);
-    }
-
-    50% {
-        transform: translate(20px, 20px) scale(1.08);
-    }
+    width: 220px;
+    height: 220px;
+    background: rgba(124, 58, 237, 0.22);
+    bottom: -40px;
+    right: -40px;
 }
 
 /* Close button */
@@ -1769,8 +1763,8 @@ ul {
     gap: 12px;
     margin-bottom: 24px;
     opacity: 0;
-    transform: translateY(-16px);
-    transition: opacity 0.4s ease 0.15s, transform 0.4s ease 0.15s;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease 0.05s, transform 0.3s ease 0.05s;
     align-self: flex-start;
 }
 
@@ -1833,37 +1827,37 @@ ul {
     transform: translateX(0);
 }
 
-/* Each link gets a different delay based on data-i */
+/* Shorter stagger delays since menu now opens fast */
 .mobile-menu.open .mm-link[data-i="1"] {
-    transition-delay: 0.25s;
+    transition-delay: 0.08s;
 }
 
 .mobile-menu.open .mm-link[data-i="2"] {
-    transition-delay: 0.32s;
+    transition-delay: 0.13s;
 }
 
 .mobile-menu.open .mm-link[data-i="3"] {
-    transition-delay: 0.39s;
+    transition-delay: 0.18s;
 }
 
 .mobile-menu.open .mm-link[data-i="4"] {
-    transition-delay: 0.46s;
+    transition-delay: 0.23s;
 }
 
 .mobile-menu.open .mm-link[data-i="5"] {
-    transition-delay: 0.53s;
+    transition-delay: 0.28s;
 }
 
 .mobile-menu.open .mm-link[data-i="6"] {
-    transition-delay: 0.60s;
+    transition-delay: 0.33s;
 }
 
 .mobile-menu.open .mm-link[data-i="7"] {
-    transition-delay: 0.67s;
+    transition-delay: 0.38s;
 }
 
 .mobile-menu.open .mm-link[data-i="8"] {
-    transition-delay: 0.74s;
+    transition-delay: 0.43s;
 }
 
 .mm-link .mm-num {
@@ -1940,7 +1934,7 @@ ul {
     flex-wrap: wrap;
     justify-content: flex-start;
     opacity: 0;
-    transition: opacity 0.4s ease 0.78s;
+    transition: opacity 0.3s ease 0.48s;
 }
 
 .mobile-menu.open .mm-footer {
@@ -2182,6 +2176,31 @@ ul {
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
+    .section {
+        padding: 70px 0;
+    }
+
+    /* Ensure container never overflows */
+    .container {
+        padding: 0 16px;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* Hide desktop nav on mobile/tablets */
+    .nav-links {
+        display: none;
+    }
+
+    /* Show the hamburger button on mobile/tablets */
+    .menu-btn {
+        display: flex;
+    }
+
+    .hero h1 {
+        font-size: clamp(1.8rem, 6.5vw, 2.8rem);
+    }
+
     .services-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -2196,24 +2215,6 @@ ul {
 }
 
 @media (max-width: 768px) {
-    .section {
-        padding: 70px 0;
-    }
-
-    /* Hide desktop nav on mobile */
-    .nav-links {
-        display: none;
-    }
-
-    /* Show the new hamburger button on mobile */
-    .menu-btn {
-        display: flex;
-    }
-
-    .hero h1 {
-        font-size: clamp(2rem, 7vw, 3rem);
-    }
-
     .hero-stats {
         gap: 24px;
         flex-wrap: wrap;
@@ -2286,15 +2287,30 @@ ul {
         z-index: 1;
     }
 
+    .about-image img {
+        height: 300px;
+    }
+
+    .courses-image img {
+        height: 300px;
+    }
+
     .project-card img,
     .project-card video {
         position: relative;
         z-index: 1;
+        height: 220px;
     }
 
     .nav-logo-img {
         width: 38px;
         height: 38px;
+    }
+
+    /* Disable backdrop-filter on mobile for performance */
+    .mobile-menu {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
     }
 }
 
